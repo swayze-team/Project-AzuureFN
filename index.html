@@ -1,0 +1,2424 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SaphyreFN - Fortnite Bot Controller</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6d5acd;
+            --primary-dark: #5546b3;
+            --primary-light: #8e7ede;
+            --secondary: #ff5757;
+            --dark: #1a1b20;
+            --darker: #121218;
+            --light: #e3e5e8;
+            --lighter: #f6f6f7;
+            --success: #57f287;
+            --warning: #ffcd4a;
+            --danger: #ff4a4a;
+            --gradient-1: linear-gradient(135deg, #6d5acd, #8e7ede);
+            --gradient-2: linear-gradient(135deg, #ff5757, #ff8c8c);
+            --shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            --card-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            --border-radius: 12px;
+            --transition: all 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--darker);
+            color: var(--light);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            height: 100vh;
+        }
+
+        .sidebar {
+            background-color: var(--dark);
+            height: 100vh;
+            padding: 24px;
+            position: fixed;
+            width: 300px;
+            overflow-y: auto;
+            z-index: 10;
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-align: center;
+            margin-bottom: 30px;
+            text-shadow: 0 0 15px rgba(109, 90, 205, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .logo i {
+            color: var(--secondary);
+        }
+
+        .sidebar-section {
+            margin-bottom: 25px;
+        }
+
+        .sidebar-section h3 {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--light);
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .bot-info-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            font-size: 0.95rem;
+            padding: 12px;
+            border-radius: var(--border-radius);
+            background-color: rgba(0, 0, 0, 0.15);
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+        }
+        
+        .bot-info-item:hover {
+            transform: translateY(-2px);
+            background-color: rgba(0, 0, 0, 0.25);
+        }
+
+        .bot-info-value {
+            font-weight: 500;
+            color: var(--lighter);
+        }
+
+        .level-control {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 15px;
+            width: 100%;
+        }
+
+        .level-input-group {
+            display: flex;
+            gap: 8px;
+            width: 100%;
+            align-items: center;
+        }
+
+        .level-control input {
+            flex: 1;
+            padding: 12px 15px;
+            border-radius: var(--border-radius);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background-color: rgba(0, 0, 0, 0.2);
+            color: var(--light);
+            font-size: 0.95rem;
+            min-width: 0;
+        }
+
+        .level-control button {
+            background: var(--gradient-1);
+            color: white;
+            border: none;
+            padding: 12px 15px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            white-space: nowrap;
+            min-width: 70px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .actions button {
+            width: 100%;
+            padding: 14px;
+            margin-bottom: 12px;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-weight: 500;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-size: 0.95rem;
+            box-shadow: var(--card-shadow);
+        }
+
+        .actions .primary-btn {
+            background: var(--gradient-1);
+            color: white;
+        }
+
+        .actions .secondary-btn {
+            background-color: rgba(88, 101, 242, 0.1);
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+
+        .actions .danger-btn {
+            background: var(--gradient-2);
+            color: white;
+        }
+
+        .actions button:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background-color: rgba(0, 0, 0, 0.2);
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            width: fit-content;
+            margin: 0 auto 20px;
+        }
+
+        .status-indicator .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: var(--success);
+        }
+
+        .status-offline .dot {
+            background-color: var(--danger);
+        }
+
+        .main-content {
+            grid-column: 2;
+            padding: 35px;
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--darker) 0%, #1d1e27 100%);
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .page-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--lighter);
+        }
+
+        .tabs {
+            display: flex;
+            border-radius: var(--border-radius);
+            background-color: var(--dark);
+            overflow: hidden;
+            margin-bottom: 30px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .tab {
+            padding: 16px 25px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+            flex: 1;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .tab:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 3px;
+            background: var(--primary);
+            transition: var(--transition);
+            border-radius: 3px 3px 0 0;
+        }
+        
+        .tab:hover:after {
+            width: 40%;
+        }
+        
+        .tab.active:after {
+            width: 80%;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .filters {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            background-color: var(--dark);
+            padding: 20px;
+            border-radius: var(--border-radius);
+            margin-bottom: 20px;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .filter-group label {
+            font-size: 0.85rem;
+            color: var(--light);
+            font-weight: 500;
+        }
+
+        .filter-group select, .filter-group input {
+            padding: 10px 15px;
+            border-radius: var(--border-radius);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background-color: rgba(0, 0, 0, 0.2);
+            color: var(--light);
+        }
+
+        /* Cosmetic container */
+        .cosmetics-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .cosmetic-item {
+            background-color: var(--dark);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            transition: var(--transition);
+            cursor: pointer;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            box-shadow: var(--card-shadow);
+            height: 100%;
+            min-height: 220px;
+            border: 2px solid transparent;
+        }
+
+        .cosmetic-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .cosmetic-item.active {
+            border: 2px solid var(--primary);
+            box-shadow: 0 0 15px rgba(109, 90, 205, 0.5);
+        }
+
+        .cosmetic-icon {
+            width: 100%;
+            height: 150px;
+            object-fit: contain;
+            background-color: rgba(0, 0, 0, 0.2);
+            padding: 10px;
+        }
+
+        .cosmetic-name {
+            padding: 10px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .cosmetic-rarity {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+        }
+
+        /* Cosmetic rarity colors */
+        .rarity-common { background: linear-gradient(90deg, #9aa1a5, #c3c8cb); }
+        .rarity-uncommon { background: linear-gradient(90deg, #1eac4e, #49c66d); }
+        .rarity-rare { background: linear-gradient(90deg, #0f85d6, #49acf2); }
+        .rarity-epic { background: linear-gradient(90deg, #925cd1, #b15be2); }
+        .rarity-legendary { background: linear-gradient(90deg, #ca7d24, #e9a64c); }
+        .rarity-mythic { background: linear-gradient(90deg, #b6a337, #d6c355); }
+        .rarity-marvel { background: linear-gradient(90deg, #c71d25, #ed1d24); }
+        .rarity-dc { background: linear-gradient(90deg, #0055b7, #0476f4); }
+        .rarity-starwars { background: linear-gradient(90deg, #0088cc, #0099e5); }
+        .rarity-gaming { background: linear-gradient(90deg, #443c99, #5a4caf); }
+        .rarity-shadow { background: linear-gradient(90deg, #1a1a1a, #2d2d2d); }
+        .rarity-slurp { background: linear-gradient(90deg, #16c5ae, #18e2c8); }
+        .rarity-lava { background: linear-gradient(90deg, #d17919, #ea8d23); }
+        .rarity-frozen { background: linear-gradient(90deg, #78d3fa, #99e1fc); }
+        .rarity-dark { background: linear-gradient(90deg, #6244be, #7c59d4); }
+
+        .action-buttons {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 20px;
+        }
+
+        .action-buttons button {
+            padding: 10px 20px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-weight: 500;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .action-buttons .secondary-btn {
+            background-color: rgba(88, 101, 242, 0.1);
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+
+        .action-buttons button:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .pagination button {
+            background-color: var(--dark);
+            border: none;
+            color: var(--light);
+            width: 40px;
+            height: 40px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .pagination button:not(:disabled):hover {
+            background-color: var(--primary);
+        }
+
+        .pagination button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .page-info {
+            font-size: 0.9rem;
+            color: var(--light);
+        }
+
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: var(--dark);
+            border-radius: var(--border-radius);
+            padding: 18px;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            z-index: 1000;
+            min-width: 350px;
+            max-width: 450px;
+            animation: slideIn 0.3s ease-out;
+            border-left: 4px solid var(--primary);
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes slideOut {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
+        }
+
+        .notification.success .notification-icon {
+            color: var(--success);
+        }
+
+        .notification.error .notification-icon {
+            color: var(--danger);
+        }
+
+        .notification.info .notification-icon {
+            color: var(--primary);
+        }
+
+        .notification-icon i {
+            font-size: 1.5rem;
+        }
+
+        .notification-content {
+            flex: 1;
+        }
+
+        .notification-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .notification-message {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* Empty state styling */
+        .empty-state {
+            text-align: center;
+            padding: 50px 20px;
+            background-color: rgba(0,0,0,0.15);
+            border-radius: var(--border-radius);
+            margin: 20px 0;
+            border: 1px dashed rgba(255, 255, 255, 0.1);
+            transition: var(--transition);
+        }
+        
+        .empty-state:hover {
+            background-color: rgba(0,0,0,0.2);
+        }
+
+        .empty-state-icon {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+            opacity: 0.7;
+        }
+
+        .empty-state-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .empty-state-text {
+            font-size: 0.9rem;
+            opacity: 0.7;
+            max-width: 300px;
+            margin: 0 auto;
+        }
+
+        /* Stats grid for dashboard */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background-color: var(--dark);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: var(--shadow);
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .stat-title {
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--light);
+        }
+
+        .stat-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--gradient-1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--lighter);
+        }
+
+        .stat-description {
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+
+        /* Activity card styling */
+        .activity-card {
+            background-color: var(--dark);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+        }
+
+        .activity-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .activity-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .activity-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .activity-item {
+            display: flex;
+            gap: 15px;
+            padding: 15px;
+            background-color: rgba(0,0,0,0.2);
+            border-radius: var(--border-radius);
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1rem;
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-text {
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+        }
+
+        .activity-time {
+            font-size: 0.75rem;
+            opacity: 0.7;
+        }
+
+        /* Friends list styling */
+        .friends-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+        }
+
+        .friend-item {
+            background-color: var(--dark);
+            border-radius: var(--border-radius);
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: var(--card-shadow);
+            cursor: pointer;
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        .friend-item:hover {
+            transform: translateY(-3px);
+            background-color: rgba(255,255,255,0.05);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .friend-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--gradient-2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .friend-info {
+            flex: 1;
+        }
+
+        .friend-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .friend-status {
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--success);
+        }
+
+        .status-dot.offline {
+            background-color: var(--danger);
+        }
+
+        .friend-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .friend-actions button {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            color: white;
+        }
+
+        .invite-btn {
+            background-color: var(--primary);
+        }
+
+        .remove-btn {
+            background-color: var(--danger);
+        }
+
+        .friend-actions button:hover {
+            transform: scale(1.1);
+        }
+
+        /* Chat styling */
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 180px);
+            background-color: var(--dark);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .chat-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px 20px;
+            background-color: rgba(0,0,0,0.2);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .chat-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--gradient-2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        .chat-user-info {
+            flex: 1;
+        }
+
+        .chat-user-info h3 {
+            font-size: 1rem;
+            margin-bottom: 5px;
+        }
+
+        .chat-user-status {
+            font-size: 0.8rem;
+            opacity: 0.7;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .message {
+            max-width: 70%;
+            padding: 12px 15px;
+            border-radius: var(--border-radius);
+        }
+
+        .message-incoming {
+            background-color: rgba(255,255,255,0.05);
+            align-self: flex-start;
+            border-bottom-left-radius: 0;
+        }
+
+        .message-outgoing {
+            background-color: var(--primary);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 0;
+        }
+
+        .message-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-size: 0.8rem;
+        }
+
+        .message-sender {
+            font-weight: 600;
+        }
+
+        .message-time {
+            opacity: 0.7;
+        }
+
+        .message-content {
+            word-break: break-word;
+        }
+
+        .chat-input-container {
+            padding: 15px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .chat-input {
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input input {
+            flex: 1;
+            padding: 12px 15px;
+            border-radius: var(--border-radius);
+            border: 1px solid rgba(255,255,255,0.1);
+            background-color: rgba(0,0,0,0.2);
+            color: var(--light);
+        }
+
+        .chat-input button {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--border-radius);
+            border: none;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .chat-input button:hover:not(:disabled) {
+            transform: scale(1.05);
+        }
+
+        .chat-input button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Loading spinner */
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 200px;
+        }
+
+        .spinner {
+            border: 4px solid rgba(255,255,255,0.1);
+            border-radius: 50%;
+            border-top: 4px solid var(--primary);
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive design */
+        @media (max-width: 1024px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                display: none;
+            }
+
+            .main-content {
+                grid-column: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .cosmetics-container {
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            }
+
+            .friends-list {
+                grid-template-columns: 1fr;
+            }
+            
+            .tab {
+                padding: 10px 15px;
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .cosmetics-container {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            }
+            
+            .tab {
+                padding: 8px 10px;
+                font-size: 0.8rem;
+            }
+            
+            .tab i {
+                margin-right: 5px;
+            }
+            
+            .level-input-group {
+                flex-direction: row;
+            }
+            
+            .level-control button {
+                padding: 10px;
+                font-size: 0.9rem;
+            }
+        }
+        
+        .variant-popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.75);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        
+        .variant-popup.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        
+        .variant-container {
+            background-color: var(--dark);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow);
+            position: relative;
+        }
+        
+        .variant-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .variant-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        
+        .close-variant {
+            background: none;
+            border: none;
+            color: var(--light);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+        
+        .close-variant:hover {
+            color: var(--secondary);
+        }
+        
+        .variant-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+        }
+        
+        .variant-category {
+            margin-bottom: 20px;
+        }
+        
+        .variant-category-title {
+            font-size: 1rem;
+            font-weight: 500;
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+        
+        .variant-option {
+            background-color: rgba(0, 0, 0, 0.2);
+            border-radius: var(--border-radius);
+            padding: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            text-align: center;
+        }
+        
+        .variant-option:hover {
+            background-color: rgba(0, 0, 0, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .variant-option.selected {
+            border-color: var(--primary);
+            background-color: rgba(109, 90, 205, 0.2);
+        }
+        
+        .variant-option img {
+            width: 100%;
+            height: 80px;
+            object-fit: contain;
+            margin-bottom: 8px;
+            background-color: rgba(0, 0, 0, 0.2);
+            border-radius: var(--border-radius);
+        }
+        
+        .variant-option-name {
+            font-size: 0.85rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .variant-footer {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .variant-footer button {
+            padding: 10px 20px;
+            border-radius: var(--border-radius);
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .apply-variants {
+            background: var(--gradient-1);
+            color: white;
+            margin-left: 10px;
+        }
+        
+        .cancel-variants {
+            background-color: rgba(0, 0, 0, 0.3);
+            color: var(--light);
+        }
+        
+        .variant-footer button:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+        
+        .no-variants {
+            text-align: center;
+            padding: 30px;
+            font-size: 1rem;
+            color: var(--light);
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <div class="logo">
+                <i class="fas fa-gamepad"></i> SaphyreFN
+            </div>
+
+            <div class="status-indicator" id="status">
+                <span class="dot"></span>
+                <span class="status-text">Connected</span>
+            </div>
+
+            <div class="sidebar-section">
+                <h3>Bot Information</h3>
+                <div class="bot-info">
+                    <div class="bot-info-item">
+                        <span><i class="fas fa-user"></i> Display Name</span>
+                        <span class="bot-info-value" id="displayName">Loading...</span>
+                    </div>
+                    <div class="bot-info-item">
+                        <span><i class="fas fa-chart-line"></i> Level</span>
+                        <span class="bot-info-value" id="level">Loading...</span>
+                    </div>
+                    <div class="bot-info-item">
+                        <span><i class="fas fa-users"></i> Friends</span>
+                        <span class="bot-info-value" id="friendCount">Loading...</span>
+                    </div>
+                    <div class="bot-info-item">
+                        <span><i class="fas fa-signal"></i> Status</span>
+                        <span class="bot-info-value" id="botStatus">Loading...</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <h3>Status Control</h3>
+                <div class="level-control">
+                    <div class="level-input-group">
+                        <input type="text" id="statusInput" placeholder="New status...">
+                        <button id="setStatusBtn"><i class="fas fa-check"></i> Set</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <h3>Level Control</h3>
+                <div class="level-control">
+                    <div class="level-input-group">
+                        <input type="number" id="levelInput" placeholder="New level" min="1">
+                        <button id="setLevelBtn"><i class="fas fa-check"></i> Apply</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <h3>Actions</h3>
+                <div class="actions">
+                    <button id="refreshCosmeticsBtn" class="primary-btn">
+                        <i class="fas fa-sync-alt"></i> Refresh Cosmetics
+                    </button>
+                    <button id="acceptAllFriendsBtn" class="secondary-btn">
+                        <i class="fas fa-user-check"></i> Accept All Friend Requests
+                    </button>
+                    <button id="changeAccountBtn" class="secondary-btn">
+                        <i class="fas fa-user-circle"></i> Change Bot Account
+                    </button>
+                    <button id="rebootBotBtn" class="danger-btn">
+                        <i class="fas fa-power-off"></i> Reboot Bot
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="page-header">
+                <h1 class="page-title">Dashboard</h1>
+            </div>
+
+            <div class="tabs">
+                <div class="tab active" data-tab="dashboard">
+                    <i class="fas fa-chart-pie"></i> Dashboard
+                </div>
+                <div class="tab" data-tab="cosmetics">
+                    <i class="fas fa-tshirt"></i> Cosmetics
+                </div>
+                <div class="tab" data-tab="friends">
+                    <i class="fas fa-users"></i> Friends
+                </div>
+                <div class="tab" data-tab="chat">
+                    <i class="fas fa-comments"></i> Chat
+                </div>
+                <div class="tab" data-tab="activity">
+                    <i class="fas fa-history"></i> Activity
+                </div>
+            </div>
+
+            <!-- Dashboard Tab -->
+            <div class="tab-content active" id="dashboard-tab">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <span class="stat-title">Level</span>
+                            <div class="stat-icon">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                        </div>
+                        <div class="stat-value" id="dash-level">0</div>
+                        <div class="stat-description">Current level of your bot</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <span class="stat-title">Friends</span>
+                            <div class="stat-icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                        </div>
+                        <div class="stat-value" id="dash-friends">0</div>
+                        <div class="stat-description">Total friends connected</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <span class="stat-title">Cosmetics</span>
+                            <div class="stat-icon">
+                                <i class="fas fa-tshirt"></i>
+                            </div>
+                        </div>
+                        <div class="stat-value" id="dash-cosmetics">0</div>
+                        <div class="stat-description">Available cosmetics in database</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <span class="stat-title">Uptime</span>
+                            <div class="stat-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                        </div>
+                        <div class="stat-value" id="dash-uptime">0:00</div>
+                        <div class="stat-description">Total time since bot started</div>
+                    </div>
+                </div>
+
+                <div class="activity-card">
+                    <div class="activity-header">
+                        <div class="activity-title">Recent Activity</div>
+                    </div>
+                    <div class="activity-list" id="dash-activity">
+                        <!-- Activities will be added here dynamically -->
+                        <div class="empty-state">
+                            <div class="empty-state-icon">
+                                <i class="fas fa-history"></i>
+                            </div>
+                            <div class="empty-state-title">No Recent Activity</div>
+                            <div class="empty-state-text">Your recent bot activities will appear here</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cosmetics Tab -->
+            <div class="tab-content" id="cosmetics-tab">
+                <div class="filters">
+                    <div class="filter-group">
+                        <label for="cosmeticType">Type</label>
+                        <select id="cosmeticType">
+                            <option value="all">All Types</option>
+                            <option value="outfit">Outfits</option>
+                            <option value="backpack">Back Blings</option>
+                            <option value="emote">Emotes</option>
+                            <option value="pickaxe">Pickaxes</option>
+                            <option value="glider">Gliders</option>
+                            <option value="wrap">Wraps</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="rarityFilter">Rarity</label>
+                        <select id="rarityFilter">
+                            <option value="all">All Rarities</option>
+                            <option value="common">Common</option>
+                            <option value="uncommon">Uncommon</option>
+                            <option value="rare">Rare</option>
+                            <option value="epic">Epic</option>
+                            <option value="legendary">Legendary</option>
+                            <option value="mythic">Mythic</option>
+                            <option value="exotic">Exotic</option>
+                            <option value="marvel">Marvel</option>
+                            <option value="dc">DC</option>
+                            <option value="starwars">Star Wars</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="searchInput">Search</label>
+                        <input type="text" id="searchInput" placeholder="Search by name...">
+                    </div>
+                </div>
+
+                <div class="cosmetics-container" id="cosmeticsContainer">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button id="stopEmoteBtn" class="secondary-btn">
+                        <i class="fas fa-stop-circle"></i> Stop Emote
+                    </button>
+                </div>
+
+                <div class="pagination">
+                    <button id="prevPageBtn" disabled><i class="fas fa-chevron-left"></i></button>
+                    <span class="page-info" id="pageInfo">Page 1 of 1</span>
+                    <button id="nextPageBtn" disabled><i class="fas fa-chevron-right"></i></button>
+                </div>
+            </div>
+
+            <!-- Friends Tab -->
+            <div class="tab-content" id="friends-tab">
+                <div class="friends-list" id="friendsList">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chat Tab -->
+            <div class="tab-content" id="chat-tab">
+                <div class="chat-container">
+                    <div class="chat-header" id="chatHeader">
+                        <div class="chat-avatar">?</div>
+                        <div class="chat-user-info">
+                            <h3>Select a friend</h3>
+                            <div class="chat-user-status">
+                                No one selected
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chat-messages" id="chatMessages">
+                        <div class="empty-state">
+                            <div class="empty-state-icon">
+                                <i class="fas fa-comments"></i>
+                            </div>
+                            <div class="empty-state-title">No Conversation Selected</div>
+                            <div class="empty-state-text">Select a friend from the Friends tab to start chatting</div>
+                        </div>
+                    </div>
+                    <div class="chat-input-container">
+                        <div class="chat-input">
+                            <input type="text" id="chatInput" placeholder="Type a message..." disabled>
+                            <button id="sendMessageBtn" disabled><i class="fas fa-paper-plane"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Activity Tab -->
+            <div class="tab-content" id="activity-tab">
+                <div class="activity-card">
+                    <div class="activity-list" id="activityList">
+                        <div class="empty-state">
+                            <div class="empty-state-icon">
+                                <i class="fas fa-history"></i>
+                            </div>
+                            <div class="empty-state-title">No Activity Recorded</div>
+                            <div class="empty-state-text">Your bot activities will appear here as you use it</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="variant-popup" id="variantPopup">
+        <div class="variant-container">
+            <div class="variant-header">
+                <div class="variant-title">Select Variants</div>
+                <button class="close-variant" id="closeVariantBtn"><i class="fas fa-times"></i></button>
+            </div>
+            <div id="variantContent">
+                <!-- Variant options will be loaded here -->
+            </div>
+            <div class="variant-footer">
+                <button class="cancel-variants" id="cancelVariantsBtn">Cancel</button>
+                <button class="apply-variants" id="applyVariantsBtn">Apply</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DOM Ready
+        document.addEventListener('DOMContentLoaded', () => {
+            // Elements
+            const statusEl = document.getElementById('status');
+            const statusTextEl = statusEl.querySelector('.status-text');
+            const displayNameEl = document.getElementById('displayName');
+            const levelEl = document.getElementById('level');
+            const friendCountEl = document.getElementById('friendCount');
+            const botStatusEl = document.getElementById('botStatus');
+            const cosmeticsContainer = document.getElementById('cosmeticsContainer');
+            const friendsList = document.getElementById('friendsList');
+            const chatMessages = document.getElementById('chatMessages');
+            const chatHeader = document.getElementById('chatHeader');
+            const chatInput = document.getElementById('chatInput');
+            const sendMessageBtn = document.getElementById('sendMessageBtn');
+            const levelInput = document.getElementById('levelInput');
+            const setLevelBtn = document.getElementById('setLevelBtn');
+            const statusInput = document.getElementById('statusInput');
+            const setStatusBtn = document.getElementById('setStatusBtn');
+            const refreshCosmeticsBtn = document.getElementById('refreshCosmeticsBtn');
+            const acceptAllFriendsBtn = document.getElementById('acceptAllFriendsBtn');
+            const rebootBotBtn = document.getElementById('rebootBotBtn');
+            const changeAccountBtn = document.getElementById('changeAccountBtn');
+            const cosmeticTypeFilter = document.getElementById('cosmeticType');
+            const rarityFilter = document.getElementById('rarityFilter');
+            const searchInput = document.getElementById('searchInput');
+            const prevPageBtn = document.getElementById('prevPageBtn');
+            const nextPageBtn = document.getElementById('nextPageBtn');
+            const pageInfo = document.getElementById('pageInfo');
+            const tabs = document.querySelectorAll('.tab');
+            const tabContents = document.querySelectorAll('.tab-content');
+            const stopEmoteBtn = document.getElementById('stopEmoteBtn');
+            const variantPopup = document.getElementById('variantPopup');
+            const variantContent = document.getElementById('variantContent');
+            const closeVariantBtn = document.getElementById('closeVariantBtn');
+            const applyVariantsBtn = document.getElementById('applyVariantsBtn');
+            const cancelVariantsBtn = document.getElementById('cancelVariantsBtn');
+
+            // Dashboard elements
+            const dashLevel = document.getElementById('dash-level');
+            const dashFriends = document.getElementById('dash-friends');
+            const dashCosmetics = document.getElementById('dash-cosmetics');
+            const dashUptime = document.getElementById('dash-uptime');
+            const dashActivity = document.getElementById('dash-activity');
+            const activityList = document.getElementById('activityList');
+
+            // Variables
+            let currentPage = 1;
+            let totalPages = 1;
+            let itemsPerPage = 30;
+            let filteredCosmetics = [];
+            let allCosmetics = [];
+            let selectedFriend = null;
+            let socket;
+            let isConnected = false;
+            let startTime = new Date();
+            let activities = [];
+            let selectedCosmetic = null;
+            let cosmeticCache = new Map(); // Cache for storing cosmetic data
+            let messageHistory = new Map(); // Store message history per friend
+            let debounceTimer; // For search input debouncing
+            let currentOutfit = null; // Store the currently selected outfit for variants
+            let currentVariants = {}; // Store the currently selected variants
+
+            // Initialize WebSocket connection
+            function initWebSocket() {
+                const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+                const wsUrl = `${protocol}//${window.location.host}/ws`;
+                
+                console.log('Connecting to WebSocket at:', wsUrl);
+
+                socket = new WebSocket(wsUrl);
+
+                socket.onopen = () => {
+                    isConnected = true;
+                    updateConnectionStatus(true);
+                    loadInitialData();
+                    addActivity('System', 'Connected to server');
+                };
+
+                socket.onclose = () => {
+                    isConnected = false;
+                    updateConnectionStatus(false);
+                    addActivity('System', 'Disconnected from server');
+                    setTimeout(initWebSocket, 3000); // Try to reconnect after 3 seconds
+                };
+
+                socket.onerror = (error) => {
+                    console.error('WebSocket error:', error);
+                    isConnected = false;
+                    updateConnectionStatus(false);
+                    addActivity('System', 'Connection error');
+                };
+
+                socket.onmessage = (event) => {
+                    const data = JSON.parse(event.data);
+                    handleSocketMessage(data);
+                };
+            }
+
+            // Update connection status UI
+            function updateConnectionStatus(connected) {
+                if (connected) {
+                    statusEl.classList.remove('status-offline');
+                    statusTextEl.textContent = 'Connected';
+                } else {
+                    statusEl.classList.add('status-offline');
+                    statusTextEl.textContent = 'Disconnected';
+                }
+            }
+
+            // Load initial data when connected
+            function loadInitialData() {
+                sendSocketMessage('getBotInfo');
+                sendSocketMessage('getCosmetics');
+                sendSocketMessage('getFriends');
+            }
+
+            // Send message to the server
+            function sendSocketMessage(type, data = {}) {
+                if (isConnected) {
+                    const message = {
+                        type,
+                        ...data
+                    };
+                    socket.send(JSON.stringify(message));
+                } else {
+                    showNotification('error', 'Connection Error', 'Cannot send message: Disconnected from server');
+                }
+            }
+
+            // Handle incoming socket messages
+            function handleSocketMessage(data) {
+                try {
+                    switch (data.type) {
+                        case 'botInfo':
+                            updateBotInfo(data.info);
+                            break;
+                        case 'cosmetics':
+                            updateCosmetics(data.cosmetics);
+                            break;
+                        case 'friends':
+                            updateFriends(data.friends);
+                            break;
+                        case 'friendRequest':
+                            handleFriendRequest(data.request);
+                            break;
+                        case 'partyInvite':
+                            handlePartyInvite(data.invite);
+                            break;
+                        case 'message':
+                            handleChatMessage(data.message);
+                            break;
+                        case 'notification':
+                            showNotification(data.messageType, 'Bot Notification', data.message);
+                            break;
+                        case 'cosmeticChanged':
+                            handleCosmeticChanged(data.cosmetic);
+                            break;
+                        case 'levelChanged':
+                            handleLevelChanged(data.level);
+                            break;
+                        case 'emoteStop':
+                            handleEmoteStopped();
+                            break;
+                        case 'statusChanged':
+                            handleStatusChanged(data.status);
+                            break;
+                        case 'variantsData':
+                            handleVariantsData(data);
+                            break;
+                        default:
+                            console.log('Unknown message type:', data.type);
+                    }
+                } catch (error) {
+                    console.error('Error handling message:', error);
+                    showNotification('error', 'Error', 'Failed to process server message');
+                }
+            }
+
+            // Update bot info in UI
+            function updateBotInfo(info) {
+                displayNameEl.textContent = info.displayName || 'Unknown';
+                levelEl.textContent = info.level || 'Unknown';
+                friendCountEl.textContent = info.friendCount || '0';
+                botStatusEl.textContent = info.status || 'Unknown';
+
+                // Update dashboard stats
+                dashLevel.textContent = info.level || '0';
+                dashFriends.textContent = info.friendCount || '0';
+
+                addActivity('Bot Info', `Updated bot info: ${info.displayName} (Level ${info.level})`);
+            }
+
+            // Update cosmetics list
+            function updateCosmetics(cosmetics) {
+                allCosmetics = cosmetics;
+                dashCosmetics.textContent = cosmetics.length;
+                applyFiltersAndUpdateUI();
+                addActivity('Cosmetics', `Loaded ${cosmetics.length} cosmetics`);
+            }
+
+            // Apply filters and update the cosmetics UI
+            function applyFiltersAndUpdateUI() {
+                const typeFilter = cosmeticTypeFilter.value;
+                const rarity = rarityFilter.value;
+                const searchTerm = searchInput.value.toLowerCase().trim();
+                
+                filteredCosmetics = allCosmetics.filter(cosmetic => {
+                    if (!cosmetic) return false;
+                    
+                    const typeMatch = typeFilter === 'all' || cosmetic.type === typeFilter;
+                    const rarityMatch = rarity === 'all' || (cosmetic.rarity && cosmetic.rarity.toLowerCase() === rarity);
+                    const searchMatch = !searchTerm || (cosmetic.name && cosmetic.name.toLowerCase().includes(searchTerm));
+                    return typeMatch && rarityMatch && searchMatch;
+                });
+
+                // Reset pagination
+                currentPage = 1;
+                totalPages = Math.ceil(filteredCosmetics.length / itemsPerPage);
+
+                updateCosmeticsUI();
+                updatePagination();
+            }
+
+            // Debounced search for better performance
+            function debounceSearch() {
+                clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(() => {
+                    applyFiltersAndUpdateUI();
+                }, 250); // Increased to 250ms for more reliable performance
+            }
+
+            // Update the cosmetics container UI
+            function updateCosmeticsUI() {
+                cosmeticsContainer.innerHTML = '';
+
+                if (filteredCosmetics.length === 0) {
+                    cosmeticsContainer.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">
+                                <i class="fas fa-search"></i>
+                            </div>
+                            <div class="empty-state-title">No Cosmetics Found</div>
+                            <div class="empty-state-text">Try adjusting your filters or search criteria.</div>
+                        </div>
+                    `;
+                    return;
+                }
+
+                const startIndex = (currentPage - 1) * itemsPerPage;
+                const endIndex = Math.min(startIndex + itemsPerPage, filteredCosmetics.length);
+                
+                // Create document fragment for better performance
+                const fragment = document.createDocumentFragment();
+
+                for (let i = startIndex; i < endIndex; i++) {
+                    const cosmetic = filteredCosmetics[i];
+                    const cosmeticItem = document.createElement('div');
+                    cosmeticItem.className = 'cosmetic-item';
+                    cosmeticItem.dataset.id = cosmetic.id;
+                    cosmeticItem.dataset.type = cosmetic.type;
+                    cosmeticItem.dataset.name = cosmetic.name;
+
+                    // Convert rarity to lowercase for CSS class
+                    const rarityClass = `rarity-${cosmetic.rarity.toLowerCase()}`;
+
+                    cosmeticItem.innerHTML = `
+                        <img src="${cosmetic.icon}" alt="${cosmetic.name}" class="cosmetic-icon" loading="lazy" onerror="this.src='https://i.imgur.com/BJZCnJF.png'">
+                        <div class="cosmetic-name">${cosmetic.name}</div>
+                        <div class="cosmetic-rarity ${rarityClass}"></div>
+                    `;
+
+                    cosmeticItem.addEventListener('click', () => {
+                        selectCosmetic(cosmetic);
+                    });
+                    
+                    fragment.appendChild(cosmeticItem);
+                }
+                
+                cosmeticsContainer.appendChild(fragment);
+            }
+
+            // Update pagination UI
+            function updatePagination() {
+                pageInfo.textContent = `Page ${currentPage} of ${totalPages || 1}`;
+                prevPageBtn.disabled = currentPage <= 1;
+                nextPageBtn.disabled = currentPage >= totalPages;
+            }
+
+            // Select a cosmetic
+            function selectCosmetic(cosmetic) {
+                // Remove active class from all items
+                document.querySelectorAll('.cosmetic-item.active').forEach(item => {
+                    item.classList.remove('active');
+                });
+
+                // Add active class to selected item
+                const selectedItem = document.querySelector(`.cosmetic-item[data-id="${cosmetic.id}"]`);
+                if (selectedItem) {
+                    selectedItem.classList.add('active');
+                }
+
+                // Check if this is an outfit and might have variants
+                if (cosmetic.type === 'outfit') {
+                    // First check if we have variants cached
+                    checkForVariants(cosmetic);
+                } else {
+                    // For non-outfit items, just send the selection to the server immediately
+                    sendSocketMessage('setCosmetic', {
+                        id: cosmetic.id,
+                        type: cosmetic.type
+                    });
+
+                    showNotification('info', 'Changing Cosmetic', `Changing to ${cosmetic.name}`);
+                    addActivity('Cosmetic', `Changed to ${cosmetic.name}`);
+                }
+            }
+
+            // Check if an outfit has variants
+            function checkForVariants(cosmetic) {
+                // Notify we're checking for variants
+                showNotification('info', 'Checking Variants', `Checking if ${cosmetic.name} has variants...`);
+                
+                sendSocketMessage('checkCosmeticVariants', {
+                    id: cosmetic.id,
+                    name: cosmetic.name
+                });
+                
+                // Store current outfit reference
+                currentOutfit = cosmetic;
+            }
+
+            // Open variant popup with variant options
+            function openVariantPopup(variants, outfitName) {
+                // Reset current variants
+                currentVariants = {};
+                
+                if (!variants || variants.length === 0) {
+                    // No variants available, just apply the outfit directly
+                    sendSocketMessage('setCosmetic', {
+                        id: currentOutfit.id,
+                        type: currentOutfit.type
+                    });
+                    
+                    showNotification('info', 'No Variants', `${outfitName} has no customizable variants`);
+                    addActivity('Cosmetic', `Changed to ${outfitName}`);
+                    return;
+                }
+                
+                // Organize variants by channel
+                const variantsByChannel = {};
+                variants.forEach(variant => {
+                    if (!variantsByChannel[variant.channel]) {
+                        variantsByChannel[variant.channel] = [];
+                    }
+                    variantsByChannel[variant.channel].push(variant);
+                });
+                
+                // Create variant UI
+                variantContent.innerHTML = '';
+                
+                // Create sections for each variant channel
+                for (const channel in variantsByChannel) {
+                    const categoryDiv = document.createElement('div');
+                    categoryDiv.className = 'variant-category';
+                    
+                    // Format channel name for display (e.g., "JerseyColor" -> "Jersey Color")
+                    const channelTitle = channel.replace(/([A-Z])/g, ' $1').trim();
+                    
+                    categoryDiv.innerHTML = `<div class="variant-category-title">${channelTitle}</div>`;
+                    
+                    const optionsDiv = document.createElement('div');
+                    optionsDiv.className = 'variant-options';
+                    
+                    variantsByChannel[channel].forEach(variant => {
+                        const optionDiv = document.createElement('div');
+                        optionDiv.className = 'variant-option';
+                        optionDiv.dataset.channel = channel;
+                        optionDiv.dataset.tag = variant.tag;
+                        
+                        // Use variant image if available, otherwise use a placeholder
+                        const imageUrl = variant.image || currentOutfit.icon;
+                        
+                        optionDiv.innerHTML = `
+                            <img src="${imageUrl}" alt="${variant.name}">
+                            <div class="variant-option-name">${variant.name}</div>
+                        `;
+                        
+                        // Add click handler for selecting this variant
+                        optionDiv.addEventListener('click', () => {
+                            // Remove selected class from other options in this category
+                            optionsDiv.querySelectorAll('.variant-option').forEach(option => {
+                                if (option.dataset.channel === channel) {
+                                    option.classList.remove('selected');
+                                }
+                            });
+                            
+                            // Add selected class to this option
+                            optionDiv.classList.add('selected');
+                            
+                            // Update current variants
+                            currentVariants[channel] = variant.tag;
+                        });
+                        
+                        optionsDiv.appendChild(optionDiv);
+                    });
+                    
+                    categoryDiv.appendChild(optionsDiv);
+                    variantContent.appendChild(categoryDiv);
+                }
+                
+                // Show popup
+                variantPopup.classList.add('active');
+            }
+
+            // Close variant popup
+            function closeVariantPopup() {
+                variantPopup.classList.remove('active');
+            }
+
+            // Apply selected variants
+            function applyVariants() {
+                if (!currentOutfit) return;
+                
+                // Format variants for the API - create array of objects with channel/variant properties
+                const variants = [];
+                
+                for (const channel in currentVariants) {
+                    variants.push({
+                        channel: channel,
+                        variant: currentVariants[channel]
+                    });
+                }
+                
+                // Send to server
+                sendSocketMessage('setOutfitWithVariants', {
+                    outfitId: currentOutfit.id,
+                    variants: variants
+                });
+                
+                showNotification('success', 'Applying Outfit', `Applying ${currentOutfit.name} with selected variants`);
+                addActivity('Cosmetic', `Changed to ${currentOutfit.name} with custom variants`);
+                
+                // Close popup
+                closeVariantPopup();
+            }
+
+            // Handle variant data received
+            function handleVariantsData(data) {
+                openVariantPopup(data.variants, data.outfitName);
+            }
+
+            // Update friends list
+            function updateFriends(friends) {
+                friendsList.innerHTML = '';
+
+                if (friends.length === 0) {
+                    friendsList.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">
+                                <i class="fas fa-user-friends"></i>
+                            </div>
+                            <div class="empty-state-title">No Friends Found</div>
+                            <div class="empty-state-text">Add some friends to see them here.</div>
+                        </div>
+                    `;
+                    return;
+                }
+
+                friends.forEach(friend => {
+                    const friendItem = document.createElement('div');
+                    friendItem.className = 'friend-item';
+
+                    const status = friend.isOnline ? 'Online' : 'Offline';
+                    const statusClass = friend.isOnline ? 'status-dot' : 'status-dot offline';
+
+                    friendItem.innerHTML = `
+                        <div class="friend-avatar">${friend.displayName.charAt(0)}</div>
+                        <div class="friend-info">
+                            <div class="friend-name">${friend.displayName}</div>
+                            <div class="friend-status">
+                                <span class="${statusClass}"></span>
+                                ${status}
+                            </div>
+                        </div>
+                        <div class="friend-actions">
+                            ${friend.isOnline ? `<button class="invite-btn" data-id="${friend.id}" title="Invite to party"><i class="fas fa-user-plus"></i></button>` : ''}
+                            <button class="remove-btn" data-id="${friend.id}" title="Remove friend"><i class="fas fa-user-times"></i></button>
+                        </div>
+                    `;
+
+                    // Add click event for friend selection (chat)
+                    friendItem.addEventListener('click', (e) => {
+                        // Ignore if clicked on a button
+                        if (e.target.tagName === 'BUTTON' || e.target.closest('button')) return;
+
+                        // Select this friend for chat
+                        selectFriendForChat(friend);
+                    });
+
+                    friendsList.appendChild(friendItem);
+                });
+
+                // Add event listeners for friend actions
+                document.querySelectorAll('.invite-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const friendId = e.target.closest('.invite-btn').dataset.id;
+                        inviteFriend(friendId);
+                    });
+                });
+
+                document.querySelectorAll('.remove-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const friendId = e.target.closest('.remove-btn').dataset.id;
+                        removeFriend(friendId);
+                    });
+                });
+
+                addActivity('Friends', `Updated friends list (${friends.length} friends)`);
+            }
+
+            // Select a friend for chat
+            function selectFriendForChat(friend) {
+                selectedFriend = friend;
+
+                // Update chat header
+                chatHeader.innerHTML = `
+                    <div class="chat-avatar">${friend.displayName.charAt(0)}</div>
+                    <div class="chat-user-info">
+                        <h3>${friend.displayName}</h3>
+                        <div class="chat-user-status">
+                            <span class="${friend.isOnline ? 'status-dot' : 'status-dot offline'}"></span>
+                            ${friend.isOnline ? 'Online' : 'Offline'}
+                        </div>
+                    </div>
+                `;
+
+                // Enable chat UI
+                chatInput.disabled = false;
+                sendMessageBtn.disabled = false;
+
+                // Clear chat and set placeholder
+                chatMessages.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">
+                            <i class="fas fa-comments"></i>
+                        </div>
+                        <div class="empty-state-title">Start Chatting</div>
+                        <div class="empty-state-text">Start chatting with ${friend.displayName}</div>
+                    </div>
+                `;
+
+                // Switch to chat tab
+                switchTab('chat');
+
+                // Focus on input
+                chatInput.focus();
+
+                addActivity('Chat', `Started chat with ${friend.displayName}`);
+            }
+
+            // Handle incoming chat message
+            function handleChatMessage(message) {
+                if (!chatMessages) return;
+
+                const isFromSelectedFriend = selectedFriend && message.senderId === selectedFriend.id;
+
+                // If message is from someone else and we're not in their chat, show notification
+                if (!isFromSelectedFriend && message.senderId !== 'self') {
+                    showNotification('info', 'New Message', `New message from ${message.senderName}`);
+                    addActivity('Message', `Received message from ${message.senderName}`);
+                    return;
+                }
+
+                // If we're in the right chat or it's our own message
+                if (isFromSelectedFriend || message.senderId === 'self') {
+                    // Clear empty state if present
+                    const emptyState = chatMessages.querySelector('.empty-state');
+                    if (emptyState) {
+                        chatMessages.innerHTML = '';
+                    }
+
+                    const messageEl = document.createElement('div');
+                    messageEl.className = `message ${message.senderId === 'self' ? 'message-outgoing' : 'message-incoming'}`;
+
+                    const time = new Date(message.timestamp || Date.now()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+                    messageEl.innerHTML = `
+                        <div class="message-header">
+                            <span class="message-sender">${message.senderName}</span>
+                            <span class="message-time">${time}</span>
+                        </div>
+                        <div class="message-content">${message.content}</div>
+                    `;
+
+                    chatMessages.appendChild(messageEl);
+
+                    // Scroll to bottom
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+
+                    if (message.senderId === 'self') {
+                        addActivity('Message', `Sent message to ${selectedFriend.displayName}`);
+                    }
+                }
+            }
+
+            // Handle friend request
+            function handleFriendRequest(request) {
+                showNotification('info', 'Friend Request', `Friend request from ${request.displayName}`);
+                addActivity('Friend', `Received friend request from ${request.displayName}${request.accepted ? ' (Auto-accepted)' : ''}`);
+            }
+
+            // Handle party invite
+            function handlePartyInvite(invite) {
+                showNotification('info', 'Party Invite', `Party invite from ${invite.displayName}`);
+                addActivity('Party', `Received party invite from ${invite.displayName}${invite.accepted ? ' (Auto-accepted)' : ''}`);
+            }
+
+            // Handle cosmetic changed notification
+            function handleCosmeticChanged(cosmetic) {
+                showNotification('success', 'Cosmetic Applied', `Changed to ${cosmetic.name}`);
+
+                // Update active state in UI if visible
+                document.querySelectorAll('.cosmetic-item.active').forEach(item => {
+                    item.classList.remove('active');
+                });
+
+                const newActiveItem = document.querySelector(`.cosmetic-item[data-id="${cosmetic.id}"]`);
+                if (newActiveItem) {
+                    newActiveItem.classList.add('active');
+                }
+            }
+
+            // Handle level change notification
+            function handleLevelChanged(level) {
+                levelEl.textContent = level;
+                dashLevel.textContent = level;
+                showNotification('success', 'Level Changed', `Level set to ${level}`);
+                addActivity('Level', `Changed level to ${level}`);
+            }
+
+            // Invite a friend to party
+            function inviteFriend(friendId) {
+                const friend = getFriendById(friendId);
+                sendSocketMessage('inviteFriend', { friendId });
+                showNotification('info', 'Party Invite', `Inviting ${friend ? friend.displayName : 'friend'} to party`);
+                addActivity('Party', `Invited ${friend ? friend.displayName : 'friend'} to party`);
+            }
+
+            // Remove a friend
+            function removeFriend(friendId) {
+                const friend = getFriendById(friendId);
+                if (confirm(`Are you sure you want to remove ${friend ? friend.displayName : 'this friend'}?`)) {
+                    sendSocketMessage('removeFriend', { friendId });
+                    addActivity('Friend', `Removed ${friend ? friend.displayName : 'friend'} from friends list`);
+                }
+            }
+
+            // Helper to get friend by ID
+            function getFriendById(id) {
+                const friendEl = document.querySelector(`.friend-item button[data-id="${id}"]`);
+                if (friendEl) {
+                    const friendItem = friendEl.closest('.friend-item');
+                    const name = friendItem.querySelector('.friend-name').textContent;
+                    return { id, displayName: name };
+                }
+                return null;
+            }
+
+            // Show notification
+            function showNotification(type, title, message) {
+                const notification = document.createElement('div');
+                notification.className = `notification ${type}`;
+
+                let icon = 'info-circle';
+                if (type === 'success') icon = 'check-circle';
+                if (type === 'error') icon = 'times-circle';
+
+                notification.innerHTML = `
+                    <div class="notification-icon">
+                        <i class="fas fa-${icon}"></i>
+                    </div>
+                    <div class="notification-content">
+                        <div class="notification-title">${title}</div>
+                        <div class="notification-message">${message}</div>
+                    </div>
+                `;
+
+                document.body.appendChild(notification);
+
+                // Remove after 3 seconds
+                setTimeout(() => {
+                    notification.style.animation = 'slideOut 0.3s ease-in forwards';
+                    setTimeout(() => {
+                        notification.remove();
+                    }, 300);
+                }, 3000);
+            }
+
+            // Add activity to the activity list
+            function addActivity(type, text) {
+                const time = new Date();
+                const activity = {
+                    type,
+                    text,
+                    time
+                };
+
+                activities.unshift(activity); // Add to beginning
+
+                // Limit to 50 activities
+                if (activities.length > 50) {
+                    activities.pop();
+                }
+
+                updateActivityUI();
+            }
+
+            // Update the activity UI
+            function updateActivityUI() {
+                const activityListEl = document.getElementById('activityList');
+                const dashActivityEl = document.getElementById('dash-activity');
+
+                if (activities.length === 0) {
+                    const emptyState = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">
+                                <i class="fas fa-history"></i>
+                            </div>
+                            <div class="empty-state-title">No Activity Recorded</div>
+                            <div class="empty-state-text">Your bot activities will appear here as you use it</div>
+                        </div>
+                    `;
+                    activityListEl.innerHTML = emptyState;
+                    dashActivityEl.innerHTML = emptyState;
+                    return;
+                }
+
+                activityListEl.innerHTML = '';
+                dashActivityEl.innerHTML = '';
+
+                // Function to get icon for activity type
+                function getActivityIcon(type) {
+                    const icons = {
+                        'System': 'desktop',
+                        'Bot Info': 'info-circle',
+                        'Cosmetics': 'tshirt',
+                        'Friends': 'users',
+                        'Message': 'comment',
+                        'Friend': 'user-plus',
+                        'Party': 'user-friends',
+                        'Level': 'chart-line',
+                        'Chat': 'comments'
+                    };
+                    return icons[type] || 'history';
+                }
+
+                // Create activity items for both lists
+                activities.forEach((activity, index) => {
+                    const activityItem = document.createElement('div');
+                    activityItem.className = 'activity-item';
+
+                    const timeStr = activity.time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                    const dateStr = activity.time.toLocaleDateString();
+
+                    activityItem.innerHTML = `
+                        <div class="activity-icon">
+                            <i class="fas fa-${getActivityIcon(activity.type)}"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-text">${activity.text}</div>
+                            <div class="activity-time">${timeStr} - ${dateStr}</div>
+                        </div>
+                    `;
+
+                    activityListEl.appendChild(activityItem.cloneNode(true));
+
+                    // Only add the first 5 activities to the dashboard
+                    if (index < 5) {
+                        dashActivityEl.appendChild(activityItem);
+                    }
+                });
+            }
+
+            // Update uptime counter
+            function updateUptime() {
+                const now = new Date();
+                const diff = Math.floor((now - startTime) / 1000); // difference in seconds
+
+                const hours = Math.floor(diff / 3600);
+                const minutes = Math.floor((diff % 3600) / 60);
+                const seconds = diff % 60;
+
+                const timeStr = `${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                dashUptime.textContent = timeStr;
+            }
+
+            // Switch tabs
+            function switchTab(tabId) {
+                // First remove active class from all tabs
+                tabs.forEach(tab => {
+                    tab.classList.remove('active');
+                });
+
+                // Then add active class to clicked tab
+                const targetTab = document.querySelector(`.tab[data-tab="${tabId}"]`);
+                if (targetTab) {
+                    targetTab.classList.add('active');
+                } else {
+                    // Default to first tab if target not found
+                    tabs[0].classList.add('active');
+                }
+
+                // Hide all tab content
+                tabContents.forEach(content => {
+                    content.classList.remove('active');
+                });
+
+                // Show the corresponding tab content
+                const tabContent = document.getElementById(`${tabId}-tab`);
+                if (tabContent) {
+                    tabContent.classList.add('active');
+                } else {
+                    // Default to first tab content if target not found
+                    tabContents[0].classList.add('active');
+                }
+            }
+
+            // Fix tab switching
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-tab');
+                    switchTab(tabId);
+                });
+            });
+
+            // Add event listener for stop emote button
+            stopEmoteBtn.addEventListener('click', () => {
+                sendSocketMessage('stopEmote');
+            });
+
+            // Initialize
+            initWebSocket();
+
+            // Update uptime every second
+            setInterval(updateUptime, 1000);
+
+            // Add event listeners for filters
+            cosmeticTypeFilter.addEventListener('change', () => {
+                applyFiltersAndUpdateUI();
+            });
+            
+            rarityFilter.addEventListener('change', () => {
+                applyFiltersAndUpdateUI();
+            });
+            
+            searchInput.addEventListener('input', () => {
+                debounceSearch();
+            });
+
+            // Add event listeners for pagination
+            prevPageBtn.addEventListener('click', () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    updateCosmeticsUI();
+                    updatePagination();
+                }
+            });
+
+            nextPageBtn.addEventListener('click', () => {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    updateCosmeticsUI();
+                    updatePagination();
+                }
+            });
+
+            // Add event listener for set level button
+            setLevelBtn.addEventListener('click', () => {
+                const level = parseInt(levelInput.value);
+                if (level && level > 0) {
+                    sendSocketMessage('setLevel', { level });
+                    levelInput.value = '';
+                } else {
+                    showNotification('error', 'Invalid Level', 'Please enter a valid level (minimum 1)');
+                }
+            });
+
+            // Add event listener for set status button
+            setStatusBtn.addEventListener('click', () => {
+                const status = statusInput.value.trim();
+                if (status) {
+                    sendSocketMessage('setStatus', { status });
+                    statusInput.value = '';
+                } else {
+                    showNotification('error', 'Invalid Status', 'Please enter a status message');
+                }
+            });
+
+            // Add event listener for enter key in level input
+            levelInput.addEventListener('keyup', (e) => {
+                if (e.key === 'Enter') {
+                    setLevelBtn.click();
+                }
+            });
+
+            // Add event listener for enter key in status input
+            statusInput.addEventListener('keyup', (e) => {
+                if (e.key === 'Enter') {
+                    setStatusBtn.click();
+                }
+            });
+
+            // Add chat input enter key support
+            chatInput.addEventListener('keyup', (e) => {
+                if (e.key === 'Enter' && !e.shiftKey && chatInput.value.trim() !== '') {
+                    sendMessageBtn.click();
+                }
+            });
+
+            // Handle status change notification
+            function handleStatusChanged(status) {
+                botStatusEl.textContent = status;
+                showNotification('success', 'Status Changed', `Status set to: ${status}`);
+                addActivity('Status', `Changed status to: ${status}`);
+            }
+
+            // Enhanced send message function
+            sendMessageBtn.addEventListener('click', () => {
+                const message = chatInput.value.trim();
+                if (message && selectedFriend) {
+                    sendSocketMessage('sendMessage', {
+                        recipientId: selectedFriend.id,
+                        content: message
+                    });
+                    
+                    // Add message to chat immediately for better UX
+                    const messageEl = document.createElement('div');
+                    messageEl.className = 'message message-outgoing';
+                    
+                    const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                    
+                    messageEl.innerHTML = `
+                        <div class="message-header">
+                            <span class="message-sender">You</span>
+                            <span class="message-time">${time}</span>
+                        </div>
+                        <div class="message-content">${message}</div>
+                    `;
+                    
+                    chatMessages.appendChild(messageEl);
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                    
+                    // Store in message history
+                    if (!messageHistory.has(selectedFriend.id)) {
+                        messageHistory.set(selectedFriend.id, []);
+                    }
+                    messageHistory.get(selectedFriend.id).push({
+                        sender: 'You',
+                        content: message,
+                        timestamp: new Date().toISOString(),
+                        outgoing: true
+                    });
+                    
+                    chatInput.value = '';
+                    chatInput.focus();
+                }
+            });
+
+            // Handle emote stopped notification
+            function handleEmoteStopped() {
+                showNotification('success', 'Emote Stopped', 'Current emote has been stopped');
+                addActivity('Emote', 'Stopped current emote');
+            }
+
+            // Add event listeners
+            closeVariantBtn.addEventListener('click', closeVariantPopup);
+            cancelVariantsBtn.addEventListener('click', closeVariantPopup);
+            applyVariantsBtn.addEventListener('click', applyVariants);
+        });
+    </script>
+</body>
+</html>
