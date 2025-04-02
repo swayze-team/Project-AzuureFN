@@ -14,7 +14,7 @@ const colors = require('colors');
 
 // Configuration
 const config = {
-    fortniteApiKey: 'c10c52a8-6f28-402c-974c-51bc813251bb',
+    fortniteApiKey: 'put your api key of fortnite-api.com',
     defaultCosmetics: {
         outfit: 'CID_028_Athena_Commando_F', // Renegade Raider
         backpack: 'BID_004_BlackKnight', // Black Knight Shield
